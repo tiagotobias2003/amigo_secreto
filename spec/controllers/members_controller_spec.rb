@@ -1,26 +1,25 @@
 require 'rails_helper'
 
 RSpec.describe MembersController, type: :controller do
+  include Devise::Test::ControllerHelpers
 
-  describe "GET #create" do
-    it "returns http success" do
-      get :create
-      expect(response).to have_http_status(:success)
+  before(:each) do
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    @current_user = FactoryBot.create(:user)
+    sign_in @current_user
+  end
+
+  describe "POST #create" do
+    before(:each) do
+      @member = FactoryBot.attributes_for(:member, user: @current_user)
+      post :create, params: {member: @member}
+    end
+
+    it "Return success create member" do
+      expect(response).to have_http_status(200)
+      #expect(response).to redirect_to("/campaigns/#{Campaign.last.id}")
     end
   end
 
-  describe "GET #destroy" do
-    it "returns http success" do
-      get :destroy
-      expect(response).to have_http_status(:success)
-    end
-  end
-
-  describe "GET #update" do
-    it "returns http success" do
-      get :update
-      expect(response).to have_http_status(:success)
-    end
-  end
 
 end
