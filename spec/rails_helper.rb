@@ -10,6 +10,12 @@ require 'rspec/rails'
 
 RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
+
+  config.after(:each, type: :job) do
+    clear_enqueued_jobs
+    clear_performed_jobs
+  end
+
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in

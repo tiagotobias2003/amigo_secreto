@@ -3,15 +3,15 @@ require 'rails_helper'
 describe RaffleService do
 
   before :each do
-    @campaign = create(:campaign, status: :pending)
+    @campaign = FactoryBot.create(:campaign, status: :pending)
   end
 
   describe '#call' do
     context "when has more then two members" do
       before(:each) do
-        create(:member, campaign: @campaign)
-        create(:member, campaign: @campaign)
-        create(:member, campaign: @campaign)
+        FactoryBot.create(:member, campaign: @campaign)
+        FactoryBot.create(:member, campaign: @campaign)
+        FactoryBot.create(:member, campaign: @campaign)
         @campaign.reload
 
         @results = RaffleService.new(@campaign).call
@@ -38,14 +38,17 @@ describe RaffleService do
       end
 
       it "a member x don't get a member y that get the member x" do
-        # Desafio
+        crash = false
+        @results.each do |member,friend|
+          expect(@results[friend]).not_to eq(member)
+        end
       end
 
     end
 
     context "when don't has more then two members" do
       before(:each) do
-        create(:member, campaign: @campaign)
+        FactoryBot.create(:member, campaign: @campaign)
         @campaign.reload
 
         @response = RaffleService.new(@campaign).call

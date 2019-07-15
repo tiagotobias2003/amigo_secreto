@@ -48,7 +48,7 @@ class MembersController < ApplicationController
   end
 
   def set_member_by_token
-    @member = Member.find_by!(token: params[:token])
+    @member = Member.find_by!(token: params[:token]) 
   end
 
   def member_params

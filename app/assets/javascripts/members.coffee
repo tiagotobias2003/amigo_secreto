@@ -7,6 +7,25 @@ $(document).on 'turbolinks:load', ->
     if valid_email($( "#member_email" ).val()) && $( "#member_name" ).val() != ""
       $('.new_member').submit()
 
+  $('#update_member_email, #update_member_name').keypress (e) ->
+    if e.which == 13 && valid_email($( "#update_member_email" ).val()) && $( "#update_member_name" ).val() != ""
+      $('.update_member').submit()
+
+  $('#update_member_email, #update_member_name').bind 'blur', ->
+    if valid_email($( "#update_member_email" ).val()) && $( "#update_member_name" ).val() != ""
+      $('.update_member').submit()
+
+  $('.update_member').on 'submit', (e) ->
+    $.ajax e.target.action,
+        type: 'PUT'
+        dataType: 'json',
+        data: $(e.currentTarget).serialize()
+        success: (data, text, jqXHR) ->
+          Materialize.toast('Membro Atualizado com sucesso!', 2000, 'green')
+        error: (jqXHR, textStatus, errorThrown) ->
+          Materialize.toast('Problema na atualização dos membros', 2000, 'red')
+    return false
+
   $('body').on 'click', 'a.remove_member', (e) ->
     $.ajax '/members/'+ e.currentTarget.id,
         type: 'DELETE'

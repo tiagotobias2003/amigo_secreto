@@ -51,17 +51,20 @@
           <div class="card-content col s12">
 
           <div class="member_list">
-            <% @campaign.members.each do |m| %>
+            <% @campaign.members.order(:name).each do |m| %>
               <div class="member" id="member_<%= m.id %>">
+                <%= form_for m, url: member_path(m), method: :patch, html: {class: "col s12 update_member"} do |f| %>
+                  <%= f.hidden_field :campaign_id, :value => @campaign.id %>
                 <div class="row">
                   <div class="col s12 m5 input-field">
-                    <input id="name" type="text" class="validate" value="<%= m.name %>">
+                    <%= f.text_field :name, class: 'validate', id: "update_member_name" %>
                     <label for="name" class="active">Nome</label>
                   </div>
                   <div class="col s12 m5 input-field">
-                    <input id="email" type="email" class="validate" value="<%= m.email %>">
+                    <%= f.text_field :email,  class: 'validate', id: "update_member_email" %>
                     <label for="email" class="active" data-error="Formato incorreto">Email</label>
                   </div>
+                <%end%>
                   <div class="col s3 offset-s3 m1 input-field">
                     <i class="material-icons icon <%= (m.open)? 'opened' : '' %>">visibility</i>
                   </div>
@@ -99,8 +102,8 @@
     <div class="col s12 center">
       <div class="col s6 m3 offset-m3 l2 offset-l4">
         <%= form_for @campaign, method: 'delete', html: {class: 'remove_campaign'} do |f| %>
-          <button type='submit' class="waves-effect waves-light btn grey">Remover</button>
         <% end %>
+        <a class="waves-effect waves-light btn grey modal-trigger" href="#modal1">Remover</a>
       </div>
       <div class="col s6 m3 l3">
         <%= form_tag(raffle_campaign_path(@campaign), method: 'post', class: 'raffle_campaign') do %>
@@ -110,3 +113,20 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>Remover <%=@campaign.title%></h4>
+      <p>Tem certeza que deseja remover essa campanha?</p>
+      <p><strong>Essa ação é irreversível!!!</strong></p>
+    </div>
+    <div class="modal-footer">
+      <a href="#/" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+      <a href="#/"  id="delete" class="modal-close waves-effect waves-green btn-flat">Remover</a>
+    </div>
+  </div>
